@@ -19,7 +19,7 @@ function fakeRequest(): Factory
                 ],
             ],
         ],
-        'many'   => [
+        'many' => [
             'result' => [
                 'items' => [
                     [
