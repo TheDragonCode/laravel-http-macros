@@ -1,0 +1,72 @@
+{
+    "name": "dragon-code/laravel-http-macros",
+    "description": "Extending the functionality of the Laravel HTTP client",
+    "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "laravel",
+        "http",
+        "macros",
+        "dragon-code",
+        "Andrey Helldar",
+        "Helldar"
+    ],
+    "authors": [
+        {
+            "name": "Andrey Helldar",
+            "email": "helldar@dragon-code.pro",
+            "homepage": "https://dragon-code.pro"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/TheDragonCode/laravel-http-macros/issues",
+        "source": "https://github.com/TheDragonCode/laravel-http-macros"
+    },
+    "require": {
+        "php": "^8.2",
+        "illuminate/http": "^10.0 || ^11.0",
+        "illuminate/support": "^10.0 || ^11.0"
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "^7.8",
+        "orchestra/testbench": "^8.0 || ^9.0",
+        "pestphp/pest": "^2.34",
+        "spatie/laravel-data": "^4.8"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "DragonCode\\LaravelHttpMacros\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dragon-code/codestyler": true,
+            "ergebnis/composer-normalize": true,
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true,
+            "symfony/thanks": true
+        },
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DragonCode\\LaravelHttpMacros\\ServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": [
+            "@php vendor/bin/pest --compact"
+        ]
+    }
+}
