@@ -8,6 +8,7 @@ use DragonCode\LaravelHttpMacros\ServiceProvider;
 use Illuminate\Config\Repository;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Spatie\LaravelData\LaravelDataServiceProvider;
+use Tests\Fixtures\Logging\MessageFormater;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -27,6 +28,17 @@ abstract class TestCase extends BaseTestCase
                 ToDataCollectionMacro::class,
 
                 'toFoo' => ToDataMacro::class,
+            ]);
+
+            $config->set('logging.channels.foo', [
+                'driver' => 'single',
+                'path'   => storage_path('logs/foo.log'),
+            ]);
+
+            $config->set('logging.channels.bar', [
+                'driver'    => 'single',
+                'path'      => storage_path('logs/bar.log'),
+                'formatter' => MessageFormater::class,
             ]);
         });
     }

@@ -68,6 +68,9 @@ Http::get()->toData(...); // will be method not found exception
 
 ### Available Methods
 
+#### Request
+
+- [withLogger](#withlogger)
 
 #### Response
 
@@ -75,6 +78,43 @@ Http::get()->toData(...); // will be method not found exception
 - [toDataCollection](#todatacollection)
 
 ### Method Listing
+
+#### withLogger()
+
+Adds the ability to log HTTP requests and responses.
+
+```php
+use Illuminate\Support\Facades\Http;
+
+Http::withLogger('some_channel')->get();
+```
+
+This method will log HTTP requests and responses.
+
+It is also possible to use your own handler, message formatting and path to the log file.
+To do this, you need to specify the desired channel name from the log file and define the necessary parameters in it.
+
+For example:
+
+```php
+// config/logging.php
+return [
+    // ...
+    
+    'channels' => [
+        'some' => [
+            'driver' => 'single',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/some.log'),
+            'handler' => \App\Logging\SomeHandlerStack::class,
+            'formatter' => \App\Logging\MessageFormatter::class,
+        ],
+    ],
+];
+
+// Usage
+return Http::withLogger('some')->...
+```
 
 #### toData()
 
