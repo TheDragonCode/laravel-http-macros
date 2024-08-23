@@ -10,6 +10,17 @@ use DragonCode\Support\Facades\Filesystem\File;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 
+use function array_map;
+use function base_path;
+use function collect;
+use function config;
+use function file_get_contents;
+use function implode;
+use function is_string;
+use function sprintf;
+
+use const PHP_EOL;
+
 class GenerateHelperCommand extends Command
 {
     protected $signature = 'http:macros-helper';

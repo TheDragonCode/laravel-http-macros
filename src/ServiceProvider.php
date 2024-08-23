@@ -8,6 +8,10 @@ use DragonCode\LaravelHttpMacros\Commands\GenerateHelperCommand;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
+use function app;
+use function config;
+use function is_string;
+
 class ServiceProvider extends BaseServiceProvider
 {
     public function register(): void
@@ -57,7 +61,7 @@ class ServiceProvider extends BaseServiceProvider
     protected function publishConfig(): void
     {
         $this->publishes([
-            __DIR__ . '/../config/http.php' => config_path('http.php'),
+            __DIR__ . '/../config/http.php' => app()->configPath('http.php'),
         ]);
     }
 }
