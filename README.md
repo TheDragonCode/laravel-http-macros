@@ -186,7 +186,7 @@ php artisan http:macros-helper
 
 This will help your IDE suggest methods.
 
-![IDE Helper](.github\images\ide-helper.png)
+![IDE Helper](.github/images/ide-helper.png)
 
 ## License
 
