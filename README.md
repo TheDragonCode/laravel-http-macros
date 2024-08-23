@@ -9,6 +9,8 @@
 
 ## Installation
 
+To get the latest version of `HTTP Macros`, simply require the project using [Composer](https://getcomposer.org):
+
 ```Bash
 composer require dragon-code/laravel-http-macros
 ```
