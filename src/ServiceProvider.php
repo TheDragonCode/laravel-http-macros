@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace DragonCode\LaravelHttpMacros;
 
+use DragonCode\LaravelHttpMacros\Commands\GenerateHelperCommand;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -18,6 +19,16 @@ class ServiceProvider extends BaseServiceProvider
     {
         $this->publishConfig();
         $this->bootMacros();
+        $this->bootCommands();
+    }
+
+    protected function bootCommands(): void
+    {
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                GenerateHelperCommand::class,
+            ]);
+        }
     }
 
     protected function bootMacros(): void

@@ -24,6 +24,7 @@
     },
     "require": {
         "php": "^8.2",
+        "dragon-code/support": "^6.13",
         "illuminate/http": "^10.0 || ^11.0",
         "illuminate/support": "^10.0 || ^11.0"
     },
@@ -31,6 +32,7 @@
         "guzzlehttp/guzzle": "^7.8",
         "orchestra/testbench": "^8.0 || ^9.0",
         "pestphp/pest": "^2.34",
+        "pestphp/pest-plugin-laravel": "^2.4",
         "spatie/laravel-data": "^4.8"
     },
     "minimum-stability": "stable",

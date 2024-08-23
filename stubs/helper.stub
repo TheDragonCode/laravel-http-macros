@@ -1,0 +1,10 @@
+<?php
+
+/** @noinspection all */
+
+namespace Illuminate\Http\Client {
+    /**
+{methods}
+     */
+    class Response {}
+}
