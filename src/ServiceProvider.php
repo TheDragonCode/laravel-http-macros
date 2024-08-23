@@ -6,7 +6,7 @@ namespace DragonCode\LaravelHttpMacros;
 
 use DragonCode\LaravelHttpMacros\Commands\GenerateHelperCommand;
 use DragonCode\LaravelHttpMacros\Macros\Macro;
-use Illuminate\Http\Client\Request;
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -42,7 +42,7 @@ class ServiceProvider extends BaseServiceProvider
     protected function bootRequestMacros(): void
     {
         foreach ($this->requestMacros() as $name => $macro) {
-            Request::macro($this->resolveName($name, $macro), $macro::callback());
+            PendingRequest::macro($this->resolveName($name, $macro), $macro::callback());
         }
     }
 

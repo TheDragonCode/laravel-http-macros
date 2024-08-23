@@ -68,6 +68,9 @@ Http::get()->toData(...); // will be method not found exception
 
 ### Available Methods
 
+#### Request
+
+- [withLogger](#withlogger)
 
 #### Response
 
@@ -75,6 +78,16 @@ Http::get()->toData(...); // will be method not found exception
 - [toDataCollection](#todatacollection)
 
 ### Method Listing
+
+#### withLogger()
+
+Adds the ability to log HTTP requests and responses.
+
+```php
+use Illuminate\Support\Facades\Http;
+
+Http::withLogger('some_channel')->get();
+```
 
 #### toData()
 

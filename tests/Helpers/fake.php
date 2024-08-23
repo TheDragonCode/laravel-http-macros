@@ -3,10 +3,11 @@
 declare(strict_types=1);
 
 use Illuminate\Http\Client\Factory;
+use Illuminate\Support\Facades\Http;
 
 function fakeRequest(): Factory
 {
-    return (new Factory())->fake([
+    return Http::fake([
         'simple' => [
             'id'    => 1,
             'title' => 'Qwerty 1',
