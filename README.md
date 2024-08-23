@@ -66,7 +66,17 @@ Http::get()->toData(...); // will be method not found exception
 
 ## Usage
 
-### As Class
+### Available Methods
+
+
+#### Response
+
+- [toData](#todata)
+- [toDataCollection](#todatacollection)
+
+### Method Listing
+
+#### toData()
 
 The class instance will be returned.
 
@@ -117,7 +127,7 @@ class SomeData
 return Http::get()->toData(SomeData::class);
 ```
 
-### As Collection
+#### toDataCollection()
 
 The `Illuminate\Support\Collection` object or an object inherited from it will be returned.
 

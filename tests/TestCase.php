@@ -2,8 +2,8 @@
 
 namespace Tests;
 
-use DragonCode\LaravelHttpMacros\Macros\ToDataCollectionMacro;
-use DragonCode\LaravelHttpMacros\Macros\ToDataMacro;
+use DragonCode\LaravelHttpMacros\Macros\Responses\ToDataCollectionMacro;
+use DragonCode\LaravelHttpMacros\Macros\Responses\ToDataMacro;
 use DragonCode\LaravelHttpMacros\ServiceProvider;
 use Illuminate\Config\Repository;
 use Orchestra\Testbench\TestCase as BaseTestCase;
