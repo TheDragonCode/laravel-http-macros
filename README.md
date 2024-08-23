@@ -61,7 +61,7 @@ Http::get()->toData(...); // will be method not found exception
 ```
 
 > Note
-> 
+>
 > Please note that IDE hints will not work in this case.
 
 ## Usage
@@ -175,6 +175,18 @@ class SomeData
 
 return Http::get()->toDataCollection(SomeData::class);
 ```
+
+### Generate IDE Helper files
+
+You can generate helper files for the IDE using the console command:
+
+```Bash
+php artisan http:macros-helper
+```
+
+This will help your IDE suggest methods.
+
+![IDE Helper](.github\images\ide-helper.png)
 
 ## License
 
