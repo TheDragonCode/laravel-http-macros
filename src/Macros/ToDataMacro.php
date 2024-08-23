@@ -6,6 +6,10 @@ namespace DragonCode\LaravelHttpMacros\Macros;
 
 use Closure;
 
+use function is_callable;
+use function is_null;
+use function method_exists;
+
 /**
  * Get the JSON decoded body of the response as a class instance.
  */
