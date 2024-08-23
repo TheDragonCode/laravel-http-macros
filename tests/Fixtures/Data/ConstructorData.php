@@ -2,11 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Fixtures;
+namespace Tests\Fixtures\Data;
 
-use Spatie\LaravelData\Data;
-
-class SpatieConstructorData extends Data
+class ConstructorData
 {
     public function __construct(
         public int $id,

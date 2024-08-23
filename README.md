@@ -15,6 +15,55 @@ To get the latest version of `HTTP Macros`, simply require the project using [Co
 composer require dragon-code/laravel-http-macros
 ```
 
+## Configuration
+
+If desired, you can publish the configuration file using the console command:
+
+```bash
+php artisan vendor:publish --provider="DragonCode\\LaravelHttpMacros\\ServiceProvider"
+```
+
+If your application already has a `config/http.php` file, then you can simply add a new `macros` key from the
+[configuration](config/http.php) file to it.
+
+Here you can specify a list of your classes for registering macros.
+Macro classes must inherit from the abstract class `DragonCode\LaravelHttpMacros\Macros\Macro`.
+
+You can also redefine macro names using an associative array. For example:
+
+```php
+// Config
+return [
+    'macros' => [
+        'response' => [
+            ToDataMacro::class,
+        ],
+    ],
+];
+
+// Macro
+Http::get()->toData(...);
+```
+
+```php
+// Config
+return [
+    'macros' => [
+        'response' => [
+            'qwerty' => ToDataMacro::class,
+        ],
+    ],
+];
+
+// Macro
+Http::get()->qwerty(...);
+Http::get()->toData(...); // will be method not found exception
+```
+
+> Note
+> 
+> Please note that IDE hints will not work in this case.
+
 ## Usage
 
 ### As Class

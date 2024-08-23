@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Tests\Fixtures\FromMethodData;
+use Tests\Fixtures\Data\FromMethodData;
 
 test('many', function () {
     $response = fakeRequest()->get('many');

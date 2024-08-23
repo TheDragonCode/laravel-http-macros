@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace DragonCode\LaravelHttpMacros;
 
-use DragonCode\LaravelHttpMacros\Macros\Macro;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -23,20 +22,17 @@ class ServiceProvider extends BaseServiceProvider
 
     protected function bootMacros(): void
     {
-        foreach ($this->macros() as $macros) {
-            Response::macro($macros::name(), $macros::callback());
+        foreach ($this->macros() as $name => $macro) {
+            Response::macro(
+                name : is_string($name) ? $name : $macro::name(),
+                macro: $macro::callback()
+            );
         }
     }
 
-    /**
-     * @throws \Psr\Container\ContainerExceptionInterface
-     * @throws \Psr\Container\NotFoundExceptionInterface
-     *
-     * @return array<string|Macro>
-     */
     protected function macros(): array
     {
-        return $this->app['config']->get('http.macros.response', []);
+        return config('http.macros.response', []);
     }
 
     protected function registerConfig(): void

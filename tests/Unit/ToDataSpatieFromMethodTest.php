@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Tests\Fixtures\SpatiePropertiesData;
+use Tests\Fixtures\Data\SpatiePropertiesData;
 
 test('simple', function () {
     $response = fakeRequest()->get('simple');
