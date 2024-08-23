@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DragonCode\LaravelHttpMacros\Macros;
+namespace DragonCode\LaravelHttpMacros\Macros\Responses;
 
 use Closure;
+use DragonCode\LaravelHttpMacros\Macros\Macro;
 
 use function is_callable;
 use function is_null;

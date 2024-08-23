@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace DragonCode\LaravelHttpMacros\Macros;
+namespace DragonCode\LaravelHttpMacros\Macros\Responses;
 
 use Closure;
+use DragonCode\LaravelHttpMacros\Macros\Macro;
 use Illuminate\Support\Collection;
 
 use function collect;

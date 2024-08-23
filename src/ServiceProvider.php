@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace DragonCode\LaravelHttpMacros;
 
 use DragonCode\LaravelHttpMacros\Commands\GenerateHelperCommand;
+use DragonCode\LaravelHttpMacros\Macros\Macro;
+use Illuminate\Http\Client\Request;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
@@ -22,8 +24,10 @@ class ServiceProvider extends BaseServiceProvider
     public function boot(): void
     {
         $this->publishConfig();
-        $this->bootMacros();
         $this->bootCommands();
+
+        $this->bootRequestMacros();
+        $this->bootResponseMacros();
     }
 
     protected function bootCommands(): void
@@ -35,17 +39,37 @@ class ServiceProvider extends BaseServiceProvider
         }
     }
 
-    protected function bootMacros(): void
+    protected function bootRequestMacros(): void
     {
-        foreach ($this->macros() as $name => $macro) {
-            Response::macro(
-                name : is_string($name) ? $name : $macro::name(),
-                macro: $macro::callback()
-            );
+        foreach ($this->requestMacros() as $name => $macro) {
+            Request::macro($this->resolveName($name, $macro), $macro::callback());
         }
     }
 
-    protected function macros(): array
+    protected function bootResponseMacros(): void
+    {
+        foreach ($this->responseMacros() as $name => $macro) {
+            Response::macro($this->resolveName($name, $macro), $macro::callback());
+        }
+    }
+
+    protected function resolveName(int|string $name, Macro|string $macro): string
+    {
+        return is_string($name) ? $name : $macro::name();
+    }
+
+    /**
+     * @return array<class-string|Macro>
+     */
+    protected function requestMacros(): array
+    {
+        return config('http.macros.request', []);
+    }
+
+    /**
+     * @return array<class-string|Macro>
+     */
+    protected function responseMacros(): array
     {
         return config('http.macros.response', []);
     }
