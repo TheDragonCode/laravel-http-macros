@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Collection;
-use Tests\Fixtures\SpatiePropertiesData;
+use Tests\Fixtures\Data\SpatiePropertiesData;
 
 test('many', function () {
     $response = fakeRequest()->get('many');

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use Tests\Fixtures\SpatieConstructorData;
+use Tests\Fixtures\Data\SpatieConstructorData;
 
 test('simple', function () {
     $response = fakeRequest()->get('simple');

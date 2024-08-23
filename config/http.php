@@ -10,6 +10,9 @@ return [
         'response' => [
             ToDataMacro::class,
             ToDataCollectionMacro::class,
+
+            // CustomMacro::class,
+            // 'toFoo' => CustomMacro::class,
         ],
     ],
 ];
