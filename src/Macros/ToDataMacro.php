@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace DragonCode\LaravelHttpMacros\Macroses;
+namespace DragonCode\LaravelHttpMacros\Macros;
 
 use Closure;
 
 /**
  * Get the JSON decoded body of the response as a class instance.
  */
-class ToDataMacros extends Macros
+class ToDataMacro extends Macro
 {
     public static function callback(): Closure
     {

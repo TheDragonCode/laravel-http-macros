@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace DragonCode\LaravelHttpMacros\Macroses;
+namespace DragonCode\LaravelHttpMacros\Macros;
 
 use Closure;
 use Illuminate\Support\Collection;
@@ -10,7 +10,7 @@ use Illuminate\Support\Collection;
 /**
  * Get the JSON decoded body of the response as a collection.
  */
-class ToDataCollectionMacros extends Macros
+class ToDataCollectionMacro extends Macro
 {
     public static function callback(): Closure
     {
