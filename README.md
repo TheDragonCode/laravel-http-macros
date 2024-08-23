@@ -89,6 +89,33 @@ use Illuminate\Support\Facades\Http;
 Http::withLogger('some_channel')->get();
 ```
 
+This method will log HTTP requests and responses.
+
+It is also possible to use your own handler, message formatting and path to the log file.
+To do this, you need to specify the desired channel name from the log file and define the necessary parameters in it.
+
+For example:
+
+```php
+// config/logging.php
+return [
+    // ...
+    
+    'channels' => [
+        'some' => [
+            'driver' => 'single',
+            'level' => env('LOG_LEVEL', 'debug'),
+            'path' => storage_path('logs/some.log'),
+            'handler' => \App\Logging\SomeHandlerStack::class,
+            'formatter' => \App\Logging\MessageFormatter::class,
+        ],
+    ],
+];
+
+// Usage
+return Http::withLogger('some')->...
+```
+
 #### toData()
 
 The class instance will be returned.
