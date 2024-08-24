@@ -35,6 +35,9 @@ You can also redefine macro names using an associative array. For example:
 // Config
 return [
     'macros' => [
+        'request' => [
+            WithLoggerMacro::class,
+        ],
         'response' => [
             ToDataMacro::class,
         ],
@@ -42,13 +45,17 @@ return [
 ];
 
 // Macro
+Http::withLogger('some')->get();
+Http::withLogger('some')->get()->toData(...);
 Http::get()->toData(...);
 ```
-
 ```php
 // Config
 return [
     'macros' => [
+        'request' => [
+            'qwerty' => WithLoggerMacro::class,
+        ],
         'response' => [
             'qwerty' => ToDataMacro::class,
         ],
@@ -56,8 +63,12 @@ return [
 ];
 
 // Macro
+Http::qwerty('some')->get();
+Http::qwerty('some')->get()->qwerty(...);
+Http::qwerty('some')->get()->toData(...); // method not found
+
 Http::get()->qwerty(...);
-Http::get()->toData(...); // will be method not found exception
+Http::get()->toData(...); // method not found
 ```
 
 > Note
