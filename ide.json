@@ -12,7 +12,6 @@
                         "withLogger"
                     ],
                     "classFqn": [
-                        "\\Illuminate\\Http\\Client\\Factory",
                         "\\Illuminate\\Http\\Client\\PendingRequest",
                         "\\Illuminate\\Http\\Client\\Request",
                         "\\Illuminate\\Support\\Facades\\Http"
