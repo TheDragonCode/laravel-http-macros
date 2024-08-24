@@ -12,9 +12,9 @@ beforeEach(
     fn () => Directory::ensureDelete(base_path('vendor/_http_macros'))
 );
 
-test('new generation', closure: function (string $type, string $name) {
+test('new generation', function (string $type) {
     $directory = base_path('vendor/_http_macros');
-    $filename  = $directory . "/_ide_helper_macro$name.php";
+    $filename  = $directory . "/_ide_helper_macro_$type.php";
     $snapshot  = __DIR__ . "/../../Snapshots/$type";
 
     expect($directory)->not->toBeDirectory();
@@ -25,9 +25,9 @@ test('new generation', closure: function (string $type, string $name) {
     expect(content($filename))->toBe(content($snapshot));
 })->with('types');
 
-test('replace', closure: function (string $type, string $name) {
+test('replace', function (string $type) {
     $directory = base_path('vendor/_http_macros');
-    $filename  = $directory . "/_ide_helper_macro$name.php";
+    $filename  = $directory . "/_ide_helper_macro_$type.php";
     $snapshot  = __DIR__ . "/../../Snapshots/$type";
 
     expect($directory)->not->toBeDirectory();
@@ -40,9 +40,9 @@ test('replace', closure: function (string $type, string $name) {
     expect(content($filename))->toBe(content($snapshot));
 })->with('types');
 
-test('clean up', closure: function (string $type, string $name) {
+test('clean up', function (string $type) {
     $directory = base_path('vendor/_http_macros');
-    $filename  = $directory . "/_ide_helper_macro$name.php";
+    $filename  = $directory . "/_ide_helper_macro_$type.php";
     $snapshot  = __DIR__ . "/../../Snapshots/$type";
 
     expect($directory)->not->toBeDirectory();

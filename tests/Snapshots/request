@@ -1,0 +1,11 @@
+<?php
+
+/** @noinspection all */
+
+namespace Illuminate\Http\Client {
+    /**
+     * @method $this withLogger(string $channel)
+     * @method static $this withLogger(string $channel)
+     */
+    class Request {}
+}

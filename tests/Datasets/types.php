@@ -2,7 +2,4 @@
 
 declare(strict_types=1);
 
-dataset('types', [
-    ['static', '_static'],
-    ['dynamic', ''],
-]);
+dataset('types', ['request', 'response']);
