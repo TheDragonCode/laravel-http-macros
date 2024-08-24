@@ -71,10 +71,6 @@ Http::get()->qwerty(...);
 Http::get()->toData(...); // method not found
 ```
 
-> Note
->
-> Please note that IDE hints will not work in this case.
-
 ## Usage
 
 ### Available Methods
