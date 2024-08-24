@@ -4,22 +4,28 @@ declare(strict_types=1);
 
 namespace DragonCode\LaravelHttpMacros\Commands;
 
+use Closure;
 use DragonCode\LaravelHttpMacros\Macros\Macro;
 use DragonCode\Support\Facades\Filesystem\Directory;
 use DragonCode\Support\Facades\Filesystem\File;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
+use ReflectionFunction;
+use ReflectionNamedType;
+use ReflectionParameter;
+use ReflectionUnionType;
 
-use function array_map;
 use function base_path;
+use function class_exists;
 use function collect;
 use function config;
 use function file_get_contents;
-use function implode;
-use function is_string;
+use function is_numeric;
+use function Laravel\Prompts\intro;
+use function Laravel\Prompts\outro;
 use function sprintf;
-
-use const PHP_EOL;
+use function var_export;
 
 class GenerateHelperCommand extends Command
 {
@@ -29,71 +35,124 @@ class GenerateHelperCommand extends Command
 
     public function handle(): void
     {
-        $names = $this->names();
+        $this->sections()->map(function (array $macros, string $section) {
+            intro($section);
 
-        $static  = $this->make($names, true);
-        $dynamic = $this->make($names);
-
-        $this->cleanUp();
-        $this->store($static, true);
-        $this->store($dynamic);
-    }
-
-    protected function make(array $names, bool $isStatic = false): array
-    {
-        return array_map(
-            fn (string $name) => sprintf(
-                '     * @method %s $this %s(\Closure|string $class, int|string|null $key = null)',
-                $isStatic ? 'static' : '',
-                $name
-            ),
-            $names
-        );
-    }
-
-    protected function store(array $methods, bool $isStatic = false): void
-    {
-        File::store(
-            $this->path($this->filename($isStatic)),
-            $this->makeDocBlock($methods)
-        );
-    }
-
-    protected function makeDocBlock(array $methods): string
-    {
-        return Str::replace('{methods}', implode(PHP_EOL, $methods), $this->template());
-    }
-
-    protected function names(): array
-    {
-        return collect($this->macros())->map(
-            fn (Macro|string $macro, int|string $name) => is_string($name) ? $name : $macro::name()
-        )->all();
-    }
-
-    protected function path(?string $filename = null): string
-    {
-        return base_path('vendor/_http_macros/' . $filename);
-    }
-
-    protected function filename(bool $isStatic): string
-    {
-        return $isStatic
-            ? '_ide_helper_macro_static.php'
-            : '_ide_helper_macro.php';
+            return $this->macros($macros);
+        })
+            ->tap(fn () => outro('storing'))
+            ->tap(fn () => $this->cleanUp())
+            ->each(fn (Collection $blocks, string $section) => $this->store(
+                $section,
+                $this->compileBlocks($section, $blocks->flatten())
+            ));
     }
 
     protected function cleanUp(): void
     {
-        Directory::ensureDelete($this->path());
+        $this->components->task('clean up', fn () => Directory::ensureDelete($this->directory()));
     }
 
-    protected function macros(): array
+    protected function macros(array $macros): Collection
     {
-        return config('http.macros.response', []);
+        return collect($macros)->map(function (Macro|string $macro, int|string $name) {
+            $name = $this->resolveName($macro, $name);
+
+            $this->components->task($name, function () use ($macro, $name, &$result) {
+                $result = $this->prepare($name, $this->reflectionCallback($macro::callback())->getParameters());
+            });
+
+            return $result;
+        });
     }
 
-    protected function template(): string
+    protected function store(string $section, string $content): void
+    {
+        $this->components->task($section, fn () => File::store($this->helperPath($section), $content));
+    }
+
+    protected function compileBlocks(string $section, Collection $blocks): string
+    {
+        return Str::replace(
+            ['{class}', '{methods}'],
+            [
+                Str::studly($section),
+                $blocks->implode("\n"),
+            ],
+            $this->stub()
+        );
+    }
+
+    protected function prepare(string $name, array $functions): array
+    {
+        return $this->docBlock($name, $this->docBlockParameters($functions));
+    }
+
+    protected function docBlock(string $name, string $parameters): array
+    {
+        return [
+            sprintf('     * @method $this %s(%s)', $name, $parameters),
+            sprintf('     * @method static $this %s(%s)', $name, $parameters),
+        ];
+    }
+
+    /**
+     * @param  array<ReflectionParameter>  $functions
+     *
+     * @return Collection
+     */
+    protected function docBlockParameters(array $functions): string
+    {
+        return collect($functions)->map(function (ReflectionParameter $parameter) {
+            $result = $parameter->hasType() ? $this->compactTypes($parameter->getType()) : 'mixed';
+
+            $result .= ' $' . $parameter->getName();
+
+            if ($parameter->isDefaultValueAvailable()) {
+                $result .= ' = ' . var_export($parameter->getDefaultValue(), true);
+            }
+
+            return $result;
+        })->implode(', ');
+    }
+
+    protected function compactTypes(ReflectionNamedType|ReflectionUnionType $type): string
+    {
+        if ($type instanceof ReflectionNamedType) {
+            return class_exists($type->getName()) ? '\\' . $type->getName() : $type->getName();
+        }
+
+        return collect($type->getTypes())->map(
+            fn (ReflectionNamedType $type) => $this->compactTypes($type)
+        )->implode('|');
+    }
+
+    protected function reflectionCallback(Closure $callback): ReflectionFunction
+    {
+        return new ReflectionFunction($callback);
+    }
+
+    protected function resolveName(Macro|string $macro, int|string $name): string
+    {
+        return is_numeric($name) ? $macro::name() : $name;
+    }
+
+    protected function sections(): Collection
+    {
+        return collect(config('http.macros', []));
+    }
+
+    protected function helperPath(string $name): string
+    {
+        return $this->directory() . "/_ide_helper_macro_$name.php";
+    }
+
+    protected function directory(): string
+    {
+        return base_path('vendor/_http_macros');
+    }
+
+    protected function stub(): string
     {
         return file_get_contents(__DIR__ . '/../../stubs/helper.stub');
     }

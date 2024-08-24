@@ -6,5 +6,5 @@ namespace Illuminate\Http\Client {
     /**
 {methods}
      */
-    class Response {}
+    class {class} {}
 }
