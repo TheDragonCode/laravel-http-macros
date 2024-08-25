@@ -16,6 +16,7 @@ use ReflectionNamedType;
 use ReflectionParameter;
 use ReflectionUnionType;
 
+use function array_map;
 use function base_path;
 use function class_exists;
 use function collect;
@@ -33,12 +34,23 @@ class GenerateHelperCommand extends Command
 
     protected $description = 'Generates correct PHPDocs for Http facade macros';
 
+    protected array $docBlocks = [
+        'request' => [
+            '     * @method $this %s(%s)',
+            '     * @method static $this %s(%s)',
+        ],
+        'response' => [
+            '     * @method mixed %s(%s)',
+            '     * @method static mixed %s(%s)',
+        ],
+    ];
+
     public function handle(): void
     {
         $this->sections()->map(function (array $macros, string $section) {
             intro($section);
 
-            return $this->macros($macros);
+            return $this->macros($macros, $section);
         })
             ->tap(fn () => outro('storing'))
             ->tap(fn () => $this->cleanUp())
@@ -53,13 +65,13 @@ class GenerateHelperCommand extends Command
         $this->components->task('clean up', fn () => Directory::ensureDelete($this->directory()));
     }
 
-    protected function macros(array $macros): Collection
+    protected function macros(array $macros, string $section): Collection
     {
-        return collect($macros)->map(function (Macro|string $macro, int|string $name) {
+        return collect($macros)->map(function (Macro|string $macro, int|string $name) use ($section) {
             $name = $this->resolveName($macro, $name);
 
-            $this->components->task($name, function () use ($macro, $name, &$result) {
-                $result = $this->prepare($name, $this->reflectionCallback($macro::callback())->getParameters());
+            $this->components->task($name, function () use ($macro, $name, $section, &$result) {
+                $result = $this->prepare($section, $name, $macro::callback());
             });
 
             return $result;
@@ -83,37 +95,30 @@ class GenerateHelperCommand extends Command
         );
     }
 
-    protected function prepare(string $name, array $functions): array
+    protected function prepare(string $section, string $name, Closure $callback): array
     {
-        return $this->docBlock($name, $this->docBlockParameters($functions));
+        return $this->docBlock($section, $name, $this->docBlockParameters($callback));
     }
 
-    protected function docBlock(string $name, string $parameters): array
+    protected function docBlock(string $section, string $name, string $parameters): array
     {
-        return [
-            sprintf('     * @method $this %s(%s)', $name, $parameters),
-            sprintf('     * @method static $this %s(%s)', $name, $parameters),
-        ];
+        return array_map(fn (string $template) => sprintf($template, $name, $parameters), $this->docBlocks[$section]);
     }
 
-    /**
-     * @param  array<ReflectionParameter>  $functions
-     *
-     * @return Collection
-     */
-    protected function docBlockParameters(array $functions): string
+    protected function docBlockParameters(Closure $callback): string
     {
-        return collect($functions)->map(function (ReflectionParameter $parameter) {
-            $result = $parameter->hasType() ? $this->compactTypes($parameter->getType()) : 'mixed';
+        return collect($this->reflectionCallback($callback)->getParameters())
+            ->map(function (ReflectionParameter $parameter) {
+                $result = $parameter->hasType() ? $this->compactTypes($parameter->getType()) : 'mixed';
 
-            $result .= ' $' . $parameter->getName();
+                $result .= ' $' . $parameter->getName();
 
-            if ($parameter->isDefaultValueAvailable()) {
-                $result .= ' = ' . var_export($parameter->getDefaultValue(), true);
-            }
+                if ($parameter->isDefaultValueAvailable()) {
+                    $result .= ' = ' . var_export($parameter->getDefaultValue(), true);
+                }
 
-            return $result;
-        })->implode(', ');
+                return $result;
+            })->implode(', ');
     }
 
     protected function compactTypes(ReflectionNamedType|ReflectionUnionType $type): string
