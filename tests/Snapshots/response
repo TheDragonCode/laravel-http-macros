@@ -4,12 +4,12 @@
 
 namespace Illuminate\Http\Client {
     /**
-     * @method $this toData(\Closure|string $class, string|int|null $key = NULL)
-     * @method static $this toData(\Closure|string $class, string|int|null $key = NULL)
-     * @method $this toDataCollection(\Closure|string $class, string|int|null $key = NULL)
-     * @method static $this toDataCollection(\Closure|string $class, string|int|null $key = NULL)
-     * @method $this toFoo(\Closure|string $class, string|int|null $key = NULL)
-     * @method static $this toFoo(\Closure|string $class, string|int|null $key = NULL)
+     * @method mixed toData(\Closure|string $class, string|int|null $key = NULL)
+     * @method static mixed toData(\Closure|string $class, string|int|null $key = NULL)
+     * @method mixed toDataCollection(\Closure|string $class, string|int|null $key = NULL)
+     * @method static mixed toDataCollection(\Closure|string $class, string|int|null $key = NULL)
+     * @method mixed toFoo(\Closure|string $class, string|int|null $key = NULL)
+     * @method static mixed toFoo(\Closure|string $class, string|int|null $key = NULL)
      */
     class Response {}
 }
